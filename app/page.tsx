@@ -1,5 +1,5 @@
 "use client"
-import { Show, SignInButton, SignOutButton } from "@clerk/nextjs";
+import { Show, SignInButton, } from "@clerk/nextjs";
 
 import "./style.css";
 import Navigationbar from "./parts/nav.tsx"
