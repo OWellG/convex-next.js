@@ -17,6 +17,7 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+    "allowImportingTsExtensions": true,
     "types": [
       "node"
     ],
@@ -38,7 +39,7 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts",
-    "ConvexClientProvider.tsx"
+    ".github/workflows/components/providers/ConvexClientProvider.tsx"
   ],
   "exclude": [
     "node_modules"

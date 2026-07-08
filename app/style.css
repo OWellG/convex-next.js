@@ -1,0 +1,114 @@
+body {
+    margin: 10px;
+}
+
+.boczny {
+    display: flex;
+    flex-direction: column;
+    width: 10%;
+}
+
+.nawigacja {
+    display: flex;
+    justify-content: center;
+    flex: 0 0 100%;
+    height: 3vh;
+
+}
+
+.suby {
+    height: 50vh;
+}
+
+.nawigacja img:nth-of-type(2) {
+    margin-right: 2vw;
+}
+
+.boczny label {
+    float: right;
+}
+
+.formularz input {
+    outline: 1px solid #808080;
+    border-radius: 20px;
+    width: 30vw;
+    height: 3.5vh;
+}
+
+.Link:hover {
+    background-color: #383838;
+}
+
+#pierwszyblok {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+}
+
+.Link {
+    display: flex;
+    gap: 10px;
+    border-radius: 10px;
+}
+
+#searchbar {
+    display: flex;
+}
+
+#prawastrona {
+    margin-left: auto;
+    gap: 5px;
+    display: flex;
+}
+
+#menu {
+    margin-right: auto;
+}
+
+#drugiblok {
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+}
+
+main {
+    margin-left: 3vw;
+    margin-top: 10vh;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5vw;
+    width: 90%;
+    flex-wrap: wrap;
+}
+
+#container {
+    display: flex;
+}
+
+.film .miniatura {
+    height: 30vh;
+}
+
+.autor {
+    width: 3vw;
+    float: left;
+    height: 4vh;
+    margin-top: 0.5vh;
+    border-radius: 20px;
+    margin-bottom: 2px;
+}
+
+.miniatura {
+    width: 25vw;
+    height: 30vh;
+}
+
+.sekcja {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    height: 40vh;
+    outline: 2px solid black;
+}
