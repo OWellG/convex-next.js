@@ -1,6 +1,9 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-
+import { Migrations } from "@convex-dev/migrations";
+import { DataModel } from "./_generated/dataModel.js";
+import { components } from "./_generated/api.js";
+export const migrations = new Migrations<DataModel>(components.migrations);
 export const sendMessage = mutation({
     args: {
         user: v.string(),
@@ -12,6 +15,7 @@ export const sendMessage = mutation({
             user: args.user,
             body: args.body,
         });
+
     },
 });
 
@@ -25,4 +29,11 @@ export const getMessages = query({
     },
 });
 
-
+export const setDefaultUsernamefix = migrations.define({
+    table: "messages",
+    migrateOne: async (ctx, user) => {
+        if (user.user === "Autor") {
+            await ctx.db.patch(user._id, { user: "Anonymous" });
+        }
+    },
+});

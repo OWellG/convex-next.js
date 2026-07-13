@@ -40,7 +40,6 @@ export default function Page() {
                                 user: user?.username || user?.firstName || "Anonim",
                                 body: newMessageText,
                             });
-
                             setNewMessageText("");
                         }}
                     >
