@@ -3,12 +3,14 @@ import Image from "next/image"
 import Navigationbar from "../parts/nav"
 import "./styles.css"
 import { useQuery, useMutation } from "convex/react";
+import { useUser } from "@clerk/nextjs";
 import { api } from "../../convex/_generated/api";
 import { useState } from "react";
 export default function Page() {
     const sendMessage = useMutation(api.comments.sendMessage);
     const messages = useQuery(api.comments.getMessages);
     const [newMessageText, setNewMessageText] = useState("");
+    const { user } = useUser();
     return (
         <>
             <Navigationbar />
@@ -32,7 +34,7 @@ export default function Page() {
                             e.preventDefault();
 
                             await sendMessage({
-                                user: "Autor",
+                                user: user?.username || user?.firstName || "Anonim",
                                 body: newMessageText,
                             });
 
