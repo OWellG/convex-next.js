@@ -32,7 +32,10 @@ export default function Page() {
                     <form
                         onSubmit={async (e) => {
                             e.preventDefault();
-
+                            if (newMessageText == "") {
+                                alert("Komentarz nie może być pusty");
+                                return
+                            }
                             await sendMessage({
                                 user: user?.username || user?.firstName || "Anonim",
                                 body: newMessageText,
