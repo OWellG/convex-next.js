@@ -22,9 +22,7 @@ export const sendMessage = mutation({
 export const getMessages = query({
     args: {},
     handler: async (ctx) => {
-        // Get most recent messages first
         const messages = await ctx.db.query("messages").order("desc").take(50);
-        // Reverse the list so that it's in a chronological order.
         return messages.reverse();
     },
 });
@@ -35,5 +33,22 @@ export const setDefaultUsernamefix = migrations.define({
         if (user.user === "Autor") {
             await ctx.db.patch(user._id, { user: "Anonymous" });
         }
+    },
+});
+
+export const generateUploadUrl = mutation({
+    args: {},
+    handler: async (ctx) => {
+        return await ctx.storage.generateUploadUrl();
+    },
+});
+export const sendVideo = mutation({
+    args: { storageId: v.id("_storage"), author: v.string() },
+    handler: async (ctx, args) => {
+        await ctx.db.insert("messages", {
+            body: args.storageId,
+            author: args.author,
+            format: "file",
+        });
     },
 });

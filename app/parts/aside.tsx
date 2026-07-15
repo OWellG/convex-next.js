@@ -1,28 +1,52 @@
 import Image from "next/image";
-import Link from 'next/link'
+import Link from 'next/link';
 
+// Definiujemy typ dla propsów w TypeScript
+interface AsidebarProps {
+    isOpen: boolean;
+}
 
-export default function Asidebar() {
-    return <aside className="boczny">
-        <div id="pierwszyblok" >
-            <Link href="/" className="Link"><Image src={"/images/home.png"} alt="homeicon" width={25} height={25} /><button>Główna</button></Link>
-            <Link href="/" className="Link"><Image src={"/images/shorts.png"} alt="shorts" width={25} height={25} /><button>Shorts</button></Link>
-        </div><br />
-        <hr />
-        <div className="suby">
-            <h1>Subskrypcje &gt;</h1>
-        </div>
-        <hr />
-        <div id="drugiblok">
-            <h1>Ty &gt;</h1>
-            <Link href="/" className="Link"><Image src={"/images/yourchannelicon.png"} alt="yourchannel" width={25} height={25} /><button>Twój Kanał</button></Link>
-            <Link href="/" className="Link"><Image src={"/images/history.png"} alt="historia ogladania" width={25} height={25} /><button>Historia</button></Link>
-            <Link href="/" className="Link"><Image src={"/images/playlist.png"} alt="playlisty" width={25} height={25} /><button>Playlisty</button></Link>
-            <Link href="/" className="Link"><Image src={"/images/watchlater.png"} alt="do obejrzenia" width={25} height={25} /><button>Do obejrzenia</button></Link>
-            <Link href="/" className="Link"><Image src={"/images/like.png"} alt="polubione filmy" width={25} height={25} /><button>Polubione filmy</button></Link>
-            <Link href="/" className="Link"><Image src={"/images/video.png"} alt="polubione filmy" width={25} height={25} /><button>Twoje filmy</button></Link>
-            <Link href="/" className="Link"><Image src={"/images/download.png"} alt="pobrane" width={25} height={25} /><button>Pobrane</button></Link>
+export default function Asidebar({ isOpen }: AsidebarProps) {
+    return (
+        /* Jeśli isOpen jest true, dodajemy klasę "active" */
+        <aside className={`boczny ${isOpen ? "active" : ""}`}>
+            <Link href="/" className="Link active">
+                <Image src={"/images/home.png"} alt="home" width={20} height={20} />
+                <button>Home</button>
+            </Link>
+            <Link href="/" className="Link">
+                <Image src={"/images/shorts.png"} alt="clips" width={20} height={20} />
+                <button>Clips</button>
+            </Link>
+            <Link href="/" className="Link">
+                <Image src={"/images/playlist.png"} alt="subscriptions" width={20} height={20} />
+                <button>Subscriptions</button>
+            </Link>
 
-        </div>
-    </aside>
+            <hr />
+
+            <div className="sekcja-tytul">YOU</div>
+
+            <Link href="/" className="Link">
+                <Image src={"/images/history.png"} alt="history" width={20} height={20} />
+                <button>History</button>
+            </Link>
+            <Link href="/" className="Link">
+                <Image src={"/images/video.png"} alt="your videos" width={20} height={20} />
+                <button>Your videos</button>
+            </Link>
+            <Link href="/" className="Link">
+                <Image src={"/images/like.png"} alt="liked clips" width={20} height={20} />
+                <button>Liked clips</button>
+            </Link>
+            <Link href="/" className="Link">
+                <Image src={"/images/watchlater.png"} alt="watch later" width={20} height={20} />
+                <button>Watch later</button>
+            </Link>
+            <Link href="/" className="Link">
+                <Image src={"/images/download.png"} alt="downloads" width={20} height={20} />
+                <button>Downloads</button>
+            </Link>
+        </aside>
+    );
 }

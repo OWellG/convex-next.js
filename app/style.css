@@ -1,114 +1,272 @@
+/* RESET I BAZA */
 body {
-    margin: 10px;
+    margin: 0;
+    padding: 0;
+    background-color: #0f0f14;
+    /* Ciemne tło ze screena */
+    color: #ffffff;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow: hidden;
+    /* Wyłączamy scroll na całym body, będzie tylko w main */
 }
 
-.boczny {
-    display: flex;
-    flex-direction: column;
-    width: 10%;
-}
-
+/* NAWIGACJA (TOP BAR) */
 .nawigacja {
     display: flex;
-    justify-content: center;
-    flex: 0 0 100%;
-    height: 3vh;
-
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    height: 64px;
+    background-color: #0f0f14;
+    border-bottom: 1px solid #23232f;
+    box-sizing: border-box;
 }
 
-.suby {
-    height: 50vh;
-}
-
-.nawigacja img:nth-of-type(2) {
-    margin-right: 2vw;
-}
-
-.boczny label {
-    float: right;
-}
-
-.formularz input {
-    outline: 1px solid #808080;
-    border-radius: 20px;
-    width: 30vw;
-    height: 3.5vh;
-}
-
-.Link:hover {
-    background-color: #383838;
-}
-
-#pierwszyblok {
+.nav-left {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 5px;
+    align-items: center;
+    gap: 15px;
+    width: 240px;
 }
 
-.Link {
+.logo {
     display: flex;
+    align-items: center;
     gap: 10px;
-    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1.2rem;
+    cursor: pointer;
 }
 
 #searchbar {
     display: flex;
+    flex: 1;
+    max-width: 600px;
+    justify-content: center;
+}
+
+.formularz {
+    display: flex;
+    align-items: center;
+    background-color: #1a1a24;
+    border: 1px solid #23232f;
+    border-radius: 20px;
+    padding: 8px 16px;
+    width: 100%;
+}
+
+.formularz input {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 100%;
+    outline: none;
+    margin-left: 10px;
+    font-size: 0.95rem;
 }
 
 #prawastrona {
-    margin-left: auto;
-    gap: 5px;
     display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
-#menu {
-    margin-right: auto;
-}
-
-#drugiblok {
+.upload-btn {
+    background: transparent;
+    border: 1px solid #3d3d4e;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
     display: flex;
-    flex-direction: column;
-    gap: 2vh;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
 }
 
-main {
-    margin-left: 3vw;
-    margin-top: 10vh;
-    display: flex;
-    align-items: flex-start;
-    gap: 1.5vw;
-    width: 90%;
-    flex-wrap: wrap;
+.upload-btn:hover {
+    background-color: #23232f;
 }
 
+/* KONTENER GŁÓWNY (poniżej nawigacji) */
 #container {
     display: flex;
+    height: calc(100vh - 64px);
+    width: 100%;
 }
 
-.film .miniatura {
-    height: 30vh;
-}
-
-.autor {
-    width: 3vw;
-    float: left;
-    height: 4vh;
-    margin-top: 0.5vh;
-    border-radius: 20px;
-    margin-bottom: 2px;
-}
-
-.miniatura {
-    width: 25vw;
-    height: 30vh;
-}
-
-.sekcja {
+/* PASEK BOCZNY (ASIDE) */
+.boczny {
+    width: 240px;
+    flex-shrink: 0;
+    padding: 15px 10px;
+    border-right: 1px solid #23232f;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    height: 40vh;
-    outline: 2px solid black;
+    box-sizing: border-box;
+}
+
+.Link {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    color: #b3b3b3;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: 0.2s;
+}
+
+.Link button {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: inherit;
+    cursor: pointer;
+    padding: 0;
+}
+
+.Link:hover {
+    background-color: #1a1a24;
+    color: white;
+}
+
+.Link.active {
+    background-color: #23232f;
+    color: white;
+    font-weight: 500;
+}
+
+.sekcja-tytul {
+    color: #888;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    margin: 20px 0 10px 15px;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.boczny hr {
+    border: none;
+    border-top: 1px solid #23232f;
+    margin: 15px 0;
+    width: 100%;
+}
+
+/* GŁÓWNA ZAWARTOŚĆ (MAIN) */
+main {
+    flex: 1;
+    padding: 20px 30px;
+    overflow-y: auto;
+    background-color: #0f0f14;
+    box-sizing: border-box;
+}
+
+/* TAGI / KATEGORIE */
+.kategorie {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+.tag {
+    background-color: #1a1a24;
+    border: 1px solid #23232f;
+    color: #e0e0e0;
+    padding: 6px 16px;
+    border-radius: 20px;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.tag.active {
+    background-color: #ffffff;
+    color: #000000;
+    font-weight: 500;
+}
+
+/* SIATKA WIDEO */
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px 15px;
+}
+
+.film-link {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: white;
+    gap: 12px;
+}
+
+.miniatura-kontener {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #23232f;
+}
+
+.miniatura-kontener img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.czas-trwania {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 0.75rem;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.info-wideo {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.autor-avatar {
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    background-color: #3d3d4e;
+    object-fit: cover;
+}
+
+.tekst-wideo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.tytul-wideo {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
+}
+
+.dane-wideo {
+    color: #909090;
+    font-size: 0.85rem;
+    margin: 0;
+    line-height: 1.2;
 }

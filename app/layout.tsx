@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import { ConvexClientProvider } from '@/components/providers/convex-provider';
 import { ClerkProvider } from "@clerk/nextjs"
 import "./globals.css";
+import Asidebar from "./parts/aside";
+import Navigationbar from "./parts/nav";
 
 const inter = Inter({ subsets: ["latin"] });
 
