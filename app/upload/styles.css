@@ -415,3 +415,27 @@
     font-size: 0.75rem;
     color: #8a8a9e;
 }
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    /* Wyrównuje przyciski do prawej krawędzi */
+    gap: 16px;
+    /* Odstęp między przyciskami */
+    margin-top: 24px;
+}
+
+.save-draft-btn {
+    background: transparent;
+    border: 1px solid #4f4f6c;
+    /* Dopasuj kolor ramki do swojego motywu */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Możesz dodać hover, żeby wyglądało to lepiej */
+.save-draft-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+}

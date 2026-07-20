@@ -1,10 +1,17 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 export default function Mainstrony() {
+    // Pobieramy listę filmów na żywo z Convex
+    const videos = useQuery(api.comments.getVideos);
+
     return (
         <main>
-            {/* Pasek Kategorii/Tagów */}
+            {/* Pasek Kategorii/Tagów (Nienaruszony) */}
             <div className="kategorie">
                 <div className="tag active">All</div>
                 <div className="tag">Next.js</div>
@@ -19,92 +26,48 @@ export default function Mainstrony() {
 
             {/* Siatka Wideo */}
             <div className="video-grid">
-                {/* Element Wideo 1 */}
-                <div className="film">
-                    <Link href="/video" className="film-link">
-                        <div className="miniatura-kontener">
-                            <Image
-                                src={"/images/white.png"}
-                                alt="miniatura"
-                                width={600}
-                                height={340}
-                            />
-                            <div className="czas-trwania">24:10</div>
-                        </div>
-                        <div className="info-wideo">
-                            <Image
-                                src={"/images/white.png"}
-                                alt="autor"
-                                className="autor-avatar"
-                                width={36}
-                                height={36}
-                            />
-                            <div className="tekst-wideo">
-                                <h3 className="tytul-wideo">Build a YouTube clone with Next.js & Convex</h3>
-                                <p className="dane-wideo">Convex</p>
-                                <p className="dane-wideo">128K views • 2 weeks ago</p>
-                            </div>
-                        </div>
-                    </Link>
-                </div>
+                {/* Stan ładowania danych */}
+                {videos === undefined && (
+                    <p style={{ color: "#888", gridColumn: "1 / -1", padding: "20px" }}>Loading clips...</p>
+                )}
 
-                {/* Element Wideo 2 */}
-                <div className="film">
-                    <Link href="/video" className="film-link">
-                        <div className="miniatura-kontener">
-                            <Image
-                                src={"/images/white.png"}
-                                alt="miniatura"
-                                width={600}
-                                height={340}
-                            />
-                            <div className="czas-trwania">41:07</div>
-                        </div>
-                        <div className="info-wideo">
-                            <Image
-                                src={"/images/white.png"}
-                                alt="autor"
-                                className="autor-avatar"
-                                width={36}
-                                height={36}
-                            />
-                            <div className="tekst-wideo">
-                                <h3 className="tytul-wideo">Real-time apps with Convex — the complete guide</h3>
-                                <p className="dane-wideo">DevMastery</p>
-                                <p className="dane-wideo">45K views • 1 month ago</p>
-                            </div>
-                        </div>
-                    </Link>
-                </div>
+                {/* Stan braku filmów w bazie */}
+                {videos && videos.length === 0 && (
+                    <p style={{ color: "#888", gridColumn: "1 / -1", padding: "20px" }}>No clips uploaded yet. Be the first!</p>
+                )}
 
-                {/* Element Wideo 3 */}
-                <div className="film">
-                    <Link href="/video" className="film-link">
-                        <div className="miniatura-kontener">
-                            <Image
-                                src={"/images/white.png"}
-                                alt="miniatura"
-                                width={600}
-                                height={340}
-                            />
-                            <div className="czas-trwania">18:44</div>
-                        </div>
-                        <div className="info-wideo">
-                            <Image
-                                src={"/images/white.png"}
-                                alt="autor"
-                                className="autor-avatar"
-                                width={36}
-                                height={36}
-                            />
-                            <div className="tekst-wideo">
-                                <h3 className="tytul-wideo">Master the terminal: 20 commands every dev needs</h3>
-                                <p className="dane-wideo">ShellSmith</p>
-                                <p className="dane-wideo">302K views • 3 days ago</p>
+                {/* Dynamiczna lista filmów */}
+                {videos?.map((video) => (
+                    <div className="film" key={video._id}>
+                        {/* Dynamiczny link prowadzący do konkretnego ID filmu */}
+                        <Link href={`/video/${video._id}`} className="film-link">
+                            <div className="miniatura-kontener">
+                                <Image
+                                    src={"/images/white.png"}
+                                    alt="miniatura"
+                                    width={600}
+                                    height={340}
+                                />
+                                <div className="czas-trwania">0:30</div>
                             </div>
-                        </div>
-                    </Link>
-                </div>
+                            <div className="info-wideo">
+                                <Image
+                                    src={"/images/white.png"}
+                                    alt="autor"
+                                    className="autor-avatar"
+                                    width={36}
+                                    height={36}
+                                />
+                                <div className="tekst-wideo">
+                                    {/* Wyświetlamy prawdziwy tytuł i autora z bazy */}
+                                    <h3 className="tytul-wideo">{video.title}</h3>
+                                    <p className="dane-wideo">{video.author}</p>
+                                    <p className="dane-wideo">0 views • just now</p>
+                                </div>
+                            </div>
+                        </Link>
+                    </div>
+                ))}
             </div>
         </main>
     );

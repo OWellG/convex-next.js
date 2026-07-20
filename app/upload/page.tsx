@@ -31,26 +31,47 @@ export default function UploadPage() {
 
     async function handleUploadVideo(event: FormEvent) {
         event.preventDefault();
-
+        if (!selectedVideo) return alert("Please select a video file first!");
 
         setIsUploading(true);
 
-        const postUrl = await generateUploadUrl();
-        const result = await fetch(postUrl, {
-            method: "POST",
-            headers: { "Content-Type": selectedVideo!.type },
-            body: selectedVideo,
-        });
+        try {
+            // 1. Pobranie bezpiecznego adresu URL do uploadu pliku z Convex
+            const postUrl = await generateUploadUrl();
 
-        const { storageId } = await result.json();
-        await sendVideo({
-            storageId,
-            author: authorName
-        });
+            // 2. Wysłanie pliku binarnego bezpośrednio do storage
+            const result = await fetch(postUrl, {
+                method: "POST",
+                headers: { "Content-Type": selectedVideo.type },
+                body: selectedVideo,
+            });
 
+            if (!result.ok) throw new Error("Upload to storage failed");
 
+            // 3. Odebranie storageId pliku
+            const { storageId } = await result.json();
 
+            // 4. Zapisanie metadanych w bazie danych (dorzucone title i description)
+            await sendVideo({
+                storageId,
+                author: authorName,
+                title: title || "Untitled Clip",
+                description: description || "No description provided."
+            });
 
+            alert("Clip published successfully!");
+
+            // Czyszczenie formularza po sukcesie
+            setTitle("");
+            setDescription("");
+            setSelectedVideo(null);
+            window.history.back(); // Powrót na poprzednią stronę
+        } catch (error) {
+            console.error("Upload error:", error);
+            alert("Something went wrong during the upload. Please try again.");
+        } finally {
+            setIsUploading(false);
+        }
     }
 
     return (
@@ -199,14 +220,22 @@ export default function UploadPage() {
                             </div>
                         </div>
 
-                        {/* Przycisk wysyłający cały formularz */}
-                        <button
-                            type="submit"
-                            className="publish-btn"
-                            disabled={isUploading || !selectedVideo}
-                        >
-                            {isUploading ? "Uploading..." : "Publish Clip"}
-                        </button>
+                        {/* Kontener na przyciski akcji */}
+                        <div className="form-actions">
+                            <button
+                                type="button"
+                                className="save-draft-btn"
+                            >
+                                Save draft
+                            </button>
+                            <button
+                                type="submit"
+                                className="publish-btn"
+                                disabled={isUploading || !selectedVideo}
+                            >
+                                {isUploading ? "Uploading..." : "Publish"}
+                            </button>
+                        </div>
 
                     </div>
 
