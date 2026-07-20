@@ -1,14 +1,21 @@
 "use client"
 import Image from "next/image"
-import Navigationbar from "../parts/nav"
-import Asidebar from "../parts/aside" // <-- Importujemy Twój gotowy komponent (dostosuj ścieżkę jeśli trzeba)
-import "./styles.css"
+import Navigationbar from "../../parts/nav"
+import Asidebar from "../../parts/aside"
+import "../styles.css"
 import { useQuery, useMutation } from "convex/react";
 import { useUser } from "@clerk/nextjs";
-import { api } from "../../convex/_generated/api";
+import { api } from "../../../convex/_generated/api";
 import { useState } from "react";
+import { useParams } from "next/navigation";
 
 export default function Page() {
+    const params = useParams();
+    const id = params.id as string; // To jest ID filmu (np. j772bx91...)
+
+    // 2. Pobieramy dane TEGO KONKRETNEGO filmu z Convex
+    const video = useQuery(api.comments.getVideoById, { id: id });
+
     const sendMessage = useMutation(api.comments.sendMessage);
     const messages = useQuery(api.comments.getMessages);
     const [newMessageText, setNewMessageText] = useState("");
@@ -18,6 +25,18 @@ export default function Page() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const currentUserInitial = user?.username?.[0]?.toUpperCase() || user?.firstName?.[0]?.toUpperCase() || "A";
+
+    // 3. Obsługa stanu ładowania danych z bazy
+    if (video === undefined) {
+        return (
+            <div className="page-wrapper" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#fff', height: '100vh' }}>
+                <h2>Loading clip...</h2>
+            </div>
+        );
+    }
+
+    // Dynamiczny inicjał autora filmu (np. "Convex" -> "CO")
+    const authorInitial = video.author ? video.author.substring(0, 2).toUpperCase() : "CH";
 
     return (
         <div className="page-wrapper">
@@ -34,16 +53,26 @@ export default function Page() {
 
             <main className="video-layout">
                 <div className="main-column">
-                    <div className="video-player-container">
-                        <Image src="/images/white.png" alt="film" fill className="video-image" />
+                    {/* 5. ZAMIENIAMY STATYCZNY OBRAZEK NA PRAWDZIWY ODTWARZACZ WIDEO */}
+                    <div className="video-player-container" style={{ position: 'relative', overflow: 'hidden', background: '#000' }}>
+                        <video
+                            src={video.videoUrl} // Prawdziwy link do pliku wideo z Convex Storage
+                            controls
+                            autoPlay
+                            style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                        />
                     </div>
-                    <h1 className="video-title">Build a YouTube clone with Next.js & Convex</h1>
+
+                    {/* DYNAMICZNY TYTUŁ */}
+                    <h1 className="video-title">{video.title}</h1>
 
                     <div className="author-bar">
                         <div className="author-left">
-                            <div className="avatar-text-large">CV</div>
+                            {/* DYNAMICZNY INICJAŁ AUTORA */}
+                            <div className="avatar-text-large">{authorInitial}</div>
                             <div className="author-info">
-                                <h3>Convex</h3>
+                                {/* DYNAMICZNA NAZWA AUTORA */}
+                                <h3>{video.author}</h3>
                                 <p>184K subscribers</p>
                             </div>
                             <button className="subscribe-btn">Subscribe</button>
@@ -73,18 +102,20 @@ export default function Page() {
 
                     <div className="description-box">
                         <div className="desc-stats">
-                            <strong>128,402 views • 2 weeks ago</strong>
+                            {/* Tutaj możesz w przyszłości dodać dynamiczną datę */}
+                            <strong>128,402 views • Just now</strong>
                             <span className="tag">Next.js</span>
                             <span className="tag">Convex</span>
                         </div>
-                        <p className="desc-text">
-                            In this build-along we wire up a full clip-sharing app: upload with Convex file storage, a real-time feed, a watch page, and live comments — no backend boilerplate. Chapters, source code and the deploy walkthrough are linked below.
+                        {/* DYNAMICZNY OPIS FILMU */}
+                        <p className="desc-text" style={{ whiteSpace: "pre-wrap" }}>
+                            {video.description || "No description provided."}
                         </p>
                     </div>
 
                     <div className="comments-section">
                         <div className="comments-header">
-                            <h2>{messages?.length || 328} comments</h2>
+                            <h2>{messages?.length || 0} comments</h2>
                             <button className="sort-btn">≡ Sort by</button>
                         </div>
 
@@ -99,6 +130,7 @@ export default function Page() {
                                 await sendMessage({
                                     user: user?.username || user?.firstName || "Anonim",
                                     body: newMessageText,
+                                    // Wskazówka: w przyszłości warto przesyłać tu videoId: id, aby komentarze były przypisane do konkretnego filmu!
                                 });
                                 setNewMessageText("");
                             }}
