@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"; // 1. Importujemy useState do kontrolowania stanu paska
+import { useState } from "react";
 import { Show, SignInButton } from "@clerk/nextjs";
 
 import "./style.css";
@@ -24,11 +24,9 @@ export default function Home() {
       </Show>
 
       <Show when="signed-in">
-        {/* 3. Przekazujemy naszą funkcję pod zdefiniowany przez Ciebie prop `onMenuClick` */}
         <Navigationbar onMenuClick={toggleSidebar} />
 
         <div id="container">
-          {/* 4. Przekazujemy aktualny stan (true/false) do bocznego paska */}
           <Asidebar isOpen={isSidebarOpen} />
           <Mainstrony />
         </div>
