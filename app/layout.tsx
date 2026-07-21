@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ConvexClientProvider } from '@/components/providers/convex-provider';
+import { PostHogUserSync } from "@/components/posthog-user-sync";
 import { ClerkProvider } from "@clerk/nextjs"
 import "./globals.css";
-import Asidebar from "./parts/aside";
-import Navigationbar from "./parts/nav";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +21,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ClerkProvider>
+          <PostHogUserSync />
           <ConvexClientProvider>
             {children}
           </ConvexClientProvider>

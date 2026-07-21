@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from 'next/link';
+import posthog from "posthog-js";
 
 // Definiujemy typ dla propsów w TypeScript
 interface AsidebarProps {
@@ -7,6 +8,7 @@ interface AsidebarProps {
 }
 
 export default function Asidebar({ isOpen }: AsidebarProps) {
+    const showHistoryButton = posthog.isFeatureEnabled("history-button");
     return (
         /* Jeśli isOpen jest true, dodajemy klasę "active" */
         <aside className={`boczny ${isOpen ? "active" : ""}`}>
@@ -27,10 +29,11 @@ export default function Asidebar({ isOpen }: AsidebarProps) {
 
             <div className="sekcja-tytul">YOU</div>
 
-            <Link href="/" className="Link">
+            {showHistoryButton && (<Link href="/" className="Link">
                 <Image src={"/images/history.png"} alt="history" width={20} height={20} />
                 <button>History</button>
-            </Link>
+            </Link>)}
+
             <Link href="/" className="Link">
                 <Image src={"/images/video.png"} alt="your videos" width={20} height={20} />
                 <button>Your videos</button>

@@ -8,6 +8,7 @@ import { useUser } from "@clerk/nextjs";
 import { api } from "../../../convex/_generated/api";
 import { useState } from "react";
 import { useParams } from "next/navigation";
+import posthog from "posthog-js";
 
 export default function Page() {
     const params = useParams();
@@ -20,6 +21,7 @@ export default function Page() {
     const messages = useQuery(api.comments.getMessages);
     const [newMessageText, setNewMessageText] = useState("");
     const { user } = useUser();
+    const showReplyButton = posthog.isFeatureEnabled("reply-button");
 
     // Stan odpowiedzialny za otwieranie/zamykanie menu bocznego
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -127,12 +129,20 @@ export default function Page() {
                                     alert("Komentarz nie może być pusty");
                                     return;
                                 }
-                                await sendMessage({
-                                    user: user?.username || user?.firstName || "Anonim",
-                                    body: newMessageText,
-                                    // Wskazówka: w przyszłości warto przesyłać tu videoId: id, aby komentarze były przypisane do konkretnego filmu!
-                                });
-                                setNewMessageText("");
+                                try {
+                                    await sendMessage({
+                                        user: user?.username || user?.firstName || "Anonim",
+                                        body: newMessageText,
+                                        // Wskazówka: w przyszłości warto przesyłać tu videoId: id, aby komentarze były przypisane do konkretnego filmu!
+                                    });
+                                    posthog.capture("comment_posted", {
+                                        video_id: id,
+                                    });
+                                    setNewMessageText("");
+                                } catch (error) {
+                                    posthog.captureException(error);
+                                    console.error("Comment error:", error);
+                                }
                             }}
                         >
                             <div className="comment-input-area">
@@ -169,7 +179,9 @@ export default function Page() {
                                             <div className="comment-actions">
                                                 <button>👍</button>
                                                 <button>👎</button>
-                                                <button>Reply</button>
+                                                {showReplyButton && (
+                                                    <button>Reply</button>)}
+
                                             </div>
                                         </div>
                                     </div>

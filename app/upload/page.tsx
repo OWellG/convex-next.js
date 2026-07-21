@@ -4,6 +4,7 @@ import "./styles.css"
 import { useMutation } from "convex/react"
 import { useUser } from "@clerk/nextjs"
 import { api } from "@/convex/_generated/api"
+import posthog from "posthog-js"
 
 export default function UploadPage() {
     const [title, setTitle] = useState("");
@@ -34,6 +35,13 @@ export default function UploadPage() {
         if (!selectedVideo) return alert("Please select a video file first!");
 
         setIsUploading(true);
+        posthog.capture("upload_started", {
+            file_type: selectedVideo.type,
+            file_size_bytes: selectedVideo.size,
+            visibility,
+            has_title: title.trim().length > 0,
+            has_description: description.trim().length > 0,
+        });
 
         try {
             // 1. Pobranie bezpiecznego adresu URL do uploadu pliku z Convex
@@ -59,6 +67,13 @@ export default function UploadPage() {
                 description: description || "No description provided."
             });
 
+            posthog.capture("video_published", {
+                file_type: selectedVideo.type,
+                file_size_bytes: selectedVideo.size,
+                visibility,
+                has_title: title.trim().length > 0,
+                has_description: description.trim().length > 0,
+            });
             alert("Clip published successfully!");
 
             // Czyszczenie formularza po sukcesie
@@ -67,6 +82,12 @@ export default function UploadPage() {
             setSelectedVideo(null);
             window.history.back(); // Powrót na poprzednią stronę
         } catch (error) {
+            posthog.capture("video_upload_failed", {
+                file_type: selectedVideo.type,
+                file_size_bytes: selectedVideo.size,
+                visibility,
+            });
+            posthog.captureException(error);
             console.error("Upload error:", error);
             alert("Something went wrong during the upload. Please try again.");
         } finally {
