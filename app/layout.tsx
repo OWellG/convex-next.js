@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ConvexClientProvider } from '@/components/providers/convex-provider';
 import { ClerkProvider } from "@clerk/nextjs"
+import { PostHogUserIdentifier } from "@/components/PostHogUserIdentifier";
 import "./globals.css";
 import Asidebar from "./parts/aside";
 import Navigationbar from "./parts/nav";
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ClerkProvider>
           <ConvexClientProvider>
+            <PostHogUserIdentifier />
             {children}
           </ConvexClientProvider>
         </ClerkProvider>

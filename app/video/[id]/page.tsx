@@ -6,8 +6,9 @@ import "../styles.css"
 import { useQuery, useMutation } from "convex/react";
 import { useUser } from "@clerk/nextjs";
 import { api } from "../../../convex/_generated/api";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import posthog from "posthog-js";
 
 export default function Page() {
     const params = useParams();
@@ -25,6 +26,12 @@ export default function Page() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const currentUserInitial = user?.username?.[0]?.toUpperCase() || user?.firstName?.[0]?.toUpperCase() || "A";
+
+    useEffect(() => {
+        if (video) {
+            posthog.capture("video_viewed", { video_id: id });
+        }
+    }, [id, video]);
 
     // 3. Obsługa stanu ładowania danych z bazy
     if (video === undefined) {
@@ -75,23 +82,23 @@ export default function Page() {
                                 <h3>{video.author}</h3>
                                 <p>184K subscribers</p>
                             </div>
-                            <button className="subscribe-btn">Subscribe</button>
+                            <button className="subscribe-btn" onClick={() => posthog.capture("channel_subscribed", { video_id: id })}>Subscribe</button>
                         </div>
 
                         <div className="actions-group">
                             <div className="like-dislike-group">
-                                <button className="like-btn">
+                                <button className="like-btn" onClick={() => posthog.capture("video_liked", { video_id: id })}>
                                     <Image src="/images/like.png" alt="like" width={18} height={18} /> 4.2K
                                 </button>
                                 <div className="separator"></div>
-                                <button className="dislike-btn">
+                                <button className="dislike-btn" onClick={() => posthog.capture("video_disliked", { video_id: id })}>
                                     <Image src="/images/dislike.png" alt="dislike" width={18} height={18} /> 62
                                 </button>
                             </div>
-                            <button className="action-btn">
+                            <button className="action-btn" onClick={() => posthog.capture("video_shared", { video_id: id })}>
                                 <Image src="/images/share.png" alt="udostepnij" width={18} height={18} /> Share
                             </button>
-                            <button className="action-btn">
+                            <button className="action-btn" onClick={() => posthog.capture("video_saved", { video_id: id })}>
                                 <Image src="/images/save.png" alt="zapisz" width={18} height={18} /> Save
                             </button>
                             <button className="action-btn">
@@ -132,6 +139,7 @@ export default function Page() {
                                     body: newMessageText,
                                     // Wskazówka: w przyszłości warto przesyłać tu videoId: id, aby komentarze były przypisane do konkretnego filmu!
                                 });
+                                posthog.capture("comment_posted", { video_id: id });
                                 setNewMessageText("");
                             }}
                         >

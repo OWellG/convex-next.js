@@ -4,6 +4,7 @@ import "./styles.css"
 import { useMutation } from "convex/react"
 import { useUser } from "@clerk/nextjs"
 import { api } from "@/convex/_generated/api"
+import posthog from "posthog-js"
 
 export default function UploadPage() {
     const [title, setTitle] = useState("");
@@ -25,7 +26,12 @@ export default function UploadPage() {
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
-            setSelectedVideo(event.target.files[0]);
+            const file = event.target.files[0];
+            setSelectedVideo(file);
+            posthog.capture("video_file_selected", {
+                file_type: file.type,
+                file_size_mb: parseFloat((file.size / (1024 * 1024)).toFixed(2)),
+            });
         }
     };
 
@@ -59,6 +65,13 @@ export default function UploadPage() {
                 description: description || "No description provided."
             });
 
+            posthog.capture("video_uploaded", {
+                visibility,
+                has_title: title.trim().length > 0,
+                has_description: description.trim().length > 0,
+                file_size_mb: parseFloat((selectedVideo.size / (1024 * 1024)).toFixed(2)),
+            });
+
             alert("Clip published successfully!");
 
             // Czyszczenie formularza po sukcesie
@@ -68,6 +81,7 @@ export default function UploadPage() {
             window.history.back(); // Powrót na poprzednią stronę
         } catch (error) {
             console.error("Upload error:", error);
+            posthog.captureException(error);
             alert("Something went wrong during the upload. Please try again.");
         } finally {
             setIsUploading(false);
